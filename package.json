@@ -1,0 +1,32 @@
+{
+  "name": "notion-to",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "tsc -w",
+    "lint": "eslint --fix --cache --cache-strategy content",
+    "fmt": "prettier --write .",
+    "prepare": "husky"
+  },
+  "bin": {
+    "nt": "./dist/index.js"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@types/node": "^20",
+    "eslint": "^9",
+    "eslint-plugin-import": "^2.31.0",
+    "husky": "^9.1.7",
+    "typescript": "^5",
+    "typescript-eslint": "^8.24.1"
+  },
+  "lint-staged": {
+    "*.{txt,md,json,html}": "npx prettier --write --ignore-unknown",
+    "*.{css,sass,scss,js,jsx,ts,tsx}": [
+      "npx prettier --write"
+    ],
+    "*.{js,jsx,ts,tsx}": [
+      "npx eslint --fix --cache --cache-strategy content"
+    ]
+  }
+}
