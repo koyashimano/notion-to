@@ -57,11 +57,12 @@ async function getParentText(block: BlockObjectResponseWithChildren, options?: O
       return block.file.name;
     case 'table':
       return '';
+    case 'child_page':
+      return `[${block.child_page.title}](https://notion.so/${block.id.replace(/-/g, '')})`;
     case 'audio':
     case 'bookmark':
     case 'breadcrumb':
     case 'child_database':
-    case 'child_page':
     case 'column':
     case 'column_list':
     case 'embed':
@@ -92,11 +93,15 @@ function tableToMarkdown(block: Extract<BlockObjectResponseWithChildren, { type:
 }
 
 async function getChildrenText(block: BlockObjectResponseWithChildren, options?: OptionsType) {
-  if ('type' in block && block.type === 'table') {
+  if (!('type' in block) || block.type === 'child_page') {
+    return '';
+  }
+
+  if (block.type === 'table') {
     return tableToMarkdown(block);
   }
 
-  const isQuote = 'type' in block && (block.type === 'quote' || block.type === 'callout');
+  const isQuote = block.type === 'quote' || block.type === 'callout';
 
   const children: BlockObjectResponseWithChildren[] = (() => {
     if (isQuote) {
@@ -124,7 +129,7 @@ async function getChildrenText(block: BlockObjectResponseWithChildren, options?:
   const indentedChildrenText = childrenText
     .split('\n')
     .map((line) => {
-      if ('type' in block && (block.type === 'toggle' || block.type === 'synced_block')) {
+      if (block.type === 'toggle' || block.type === 'synced_block') {
         return line;
       }
       return isQuote ? `> ${line}` : `  ${line}`;
