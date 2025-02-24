@@ -8,7 +8,12 @@ import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
 import { unified } from 'unified';
 
-export default async function markdownToHtml(markdown: string) {
+export default async function markdownToHtml(
+  markdown: string,
+  options: { fontSize?: number } = {},
+) {
+  const { fontSize = 16 } = options;
+
   const file = await unified()
     .use(remarkParse)
     .use(remarkRehype)
@@ -28,7 +33,7 @@ export default async function markdownToHtml(markdown: string) {
     <style>
       body {
         font-family: sans-serif;
-        font-size: 16px;
+        font-size: ${fontSize}px;
         line-height: 2;
       }
       table {
