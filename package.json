@@ -28,5 +28,12 @@
     "*.{js,jsx,ts,tsx}": [
       "npx eslint --fix --cache --cache-strategy content"
     ]
+  },
+  "dependencies": {
+    "@notionhq/client": "^2.2.16",
+    "axios": "^1.7.9",
+    "dotenv": "^16.4.7",
+    "markdown-table": "^3.0.4",
+    "prettier": "^3.5.2"
   }
 }
