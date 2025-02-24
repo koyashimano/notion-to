@@ -4,7 +4,7 @@ import {
 } from '@notionhq/client/build/src/api-endpoints';
 
 import { AnnotationResponse } from './types';
-import { throwNotSupportedError } from './utils';
+import { getNotionPageUrl } from './utils';
 
 function annotate(text: string, annotation: AnnotationResponse) {
   let annotated = text;
@@ -35,8 +35,22 @@ function mentionToMarkdown(mention: MentionRichTextItemResponse['mention']) {
         return `@${mention.user.name}`;
       }
       return `@${mention.user.id}`;
-    default:
-      throwNotSupportedError(`mention ${mention.type}`);
+    case 'page':
+      return getNotionPageUrl(mention.page.id);
+    case 'database':
+      return getNotionPageUrl(mention.database.id);
+    case 'link_mention':
+      return mention.link_mention.href;
+    case 'link_preview':
+      return mention.link_preview.url;
+    case 'template_mention':
+      return mention.template_mention.type === 'template_mention_date'
+        ? `@${mention.template_mention.template_mention_date}`
+        : `@${mention.template_mention.template_mention_user}`;
+    case 'date':
+      return mention.date.start + (mention.date.end ? ` ~ ${mention.date.end}` : '');
+    case 'custom_emoji':
+      return `(${mention.custom_emoji.name})`;
   }
 }
 

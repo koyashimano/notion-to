@@ -2,7 +2,7 @@ import { markdownTable } from 'markdown-table';
 
 import richTextsToMarkdown from './rich_text';
 import { BlockObjectResponseWithChildren, OptionsType } from './types';
-import { downloadImage, throwNotSupportedError } from './utils';
+import { downloadImage, getNotionPageUrl, throwNotSupportedError } from './utils';
 
 async function getParentText(block: BlockObjectResponseWithChildren, options?: OptionsType) {
   const { saveImage = true } = options ?? {};
@@ -58,7 +58,7 @@ async function getParentText(block: BlockObjectResponseWithChildren, options?: O
     case 'table':
       return '';
     case 'child_page':
-      return `[${block.child_page.title}](https://notion.so/${block.id.replace(/-/g, '')})`;
+      return `[${block.child_page.title}](${getNotionPageUrl(block.id)})`;
     case 'audio':
     case 'bookmark':
     case 'breadcrumb':

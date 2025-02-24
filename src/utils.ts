@@ -69,3 +69,7 @@ export async function downloadImage(url: string, blockId: string) {
 export function throwNotSupportedError(type: string): never {
   throw new Error(`Not supported type: ${type}`);
 }
+
+export function getNotionPageUrl(pageId: string) {
+  return `https://notion.so/${pageId.replace(/-/g, '')}`;
+}
