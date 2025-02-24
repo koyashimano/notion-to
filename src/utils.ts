@@ -1,6 +1,4 @@
 import fs from 'fs';
-import { resolve } from 'node:path';
-import * as util from 'node:util';
 import path from 'path';
 
 import { Client } from '@notionhq/client';
@@ -8,18 +6,7 @@ import axios from 'axios';
 
 import { fetchPageTitleText } from './notion_api';
 
-export function getPageId() {
-  const { values } = util.parseArgs({
-    options: { url: { type: 'string' } },
-    allowPositionals: true,
-  });
-  const url = values.url;
-
-  if (!url) {
-    console.error('url is required');
-    process.exit(1);
-  }
-
+export function getPageId(url: string) {
   const parsedUrl = new URL(url);
   const pathParts = parsedUrl.pathname.split('/');
   const lastPart = pathParts[pathParts.length - 1] || '';
@@ -27,11 +14,6 @@ export function getPageId() {
 }
 
 export async function getOutputPath(pageId: string, notion: Client) {
-  const outputPathArg = resolve(process.argv[2]);
-
-  if (outputPathArg.endsWith('.md')) {
-    return outputPathArg;
-  }
   const pageTitle = await fetchPageTitleText(pageId, notion);
   return `${sanitizeFilename(pageTitle)}.md`;
 }
