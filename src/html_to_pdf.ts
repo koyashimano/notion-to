@@ -28,6 +28,13 @@ export default async function generatePdfFromHtml(html: string, outputPath: stri
       bottom: '25mm',
       left: '25mm',
     },
+    displayHeaderFooter: true,
+    headerTemplate: '<div></div>',
+    footerTemplate: `
+    <div style="font-size: 10px; text-align: center; width: 100%;">
+      <span class="pageNumber"></span>
+    </div>
+    `,
   });
 
   await page.close();
