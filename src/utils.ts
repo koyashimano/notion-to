@@ -13,9 +13,9 @@ export function getPageId(url: string) {
   return lastPart.slice(-32);
 }
 
-export async function getOutputPath(pageId: string, notion: Client) {
+export async function getOutputPath(pageId: string, notion: Client, extension = 'md') {
   const pageTitle = await fetchPageTitleText(pageId, notion);
-  return `${sanitizeFilename(pageTitle)}.md`;
+  return `${sanitizeFilename(pageTitle)}.${extension}`;
 }
 
 function sanitizeFilename(before: string) {

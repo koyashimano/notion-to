@@ -8,6 +8,7 @@ import { defineCommand, runMain } from 'citty';
 import pkg from '../package.json';
 
 import getAuthToken from './env';
+import markdownToHtml from './markdown_to_html';
 import notionToMarkdown from './notion_to_markdown';
 import { getOutputPath, getPageId } from './utils';
 
@@ -28,6 +29,10 @@ const main = defineCommand({
       description: 'Output markdown file path',
       alias: ['o'],
     },
+    html: {
+      type: 'boolean',
+      description: 'Output as HTML file',
+    },
     version: {
       type: 'boolean',
       description: 'Show version',
@@ -36,9 +41,16 @@ const main = defineCommand({
   async run({ args }) {
     const pageId = getPageId(args.url);
     const notion = new Client({ auth: getAuthToken() });
-    const outputPath = args.output || (await getOutputPath(pageId, notion));
     const markdown = await notionToMarkdown({ pageId, notion });
-    fs.writeFileSync(outputPath, markdown);
+    const outputPath =
+      args.output || (await getOutputPath(pageId, notion, args.html ? 'html' : 'md'));
+
+    if (args.html) {
+      const html = await markdownToHtml(markdown);
+      fs.writeFileSync(outputPath, html);
+    } else {
+      fs.writeFileSync(outputPath, markdown);
+    }
   },
 });
 
